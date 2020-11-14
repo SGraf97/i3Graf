@@ -33,6 +33,8 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec konsole
 
+
+
 # kill focused window
 bindsym $mod+q kill
 
@@ -48,11 +50,11 @@ bindsym $mod+z exec --no-startup-id morc_menu
 
 #exec --no-startup-id volumeicon
 #bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
-exec --no-startup-id pulseaudio
-#exec --no-startup-id pa-applet
-bindsym $mod+Ctrl+m exec pavucontrol
-
-################################################################################################
+exec --no-startup-id pulseaudio -k
+bindsym $mod+Ctrl+m exec pavucontrol-qt
+exec --no-startup-id pulseaudio --start
+exec --no-startup-id pa-applet
+###############################################################################################
 
 # Screen brightness controls
 # bindsym XF86MonBrightnessUp exec "xbacklight -inc 10; notify-send 'brightness up'"
@@ -75,23 +77,11 @@ bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
 # focus_follows_mouse no
 
-# change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
-
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
-
-# move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -160,15 +150,15 @@ set $ws7 7
 set $ws8 8
 #assign workspaces to displays
 #main display
-workspace "$ws1" output HDMI-1
-workspace "$ws2" output HDMI-1
-workspace "$ws3" output HDMI-1
-workspace "$ws4" output HDMI-1
+workspace "$ws1" output HDMI-0
+workspace "$ws2" output HDMI-0
+workspace "$ws3" output HDMI-0
+workspace "$ws4" output HDMI-0
 #secondary display
-workspace "$ws5" output DP-3
-workspace "$ws6" output DP-3
-workspace "$ws7" output DP-3
-workspace "$ws8" output DP-3
+workspace "$ws5" output DP-1
+workspace "$ws6" output DP-1
+workspace "$ws7" output DP-1
+workspace "$ws8" output DP-1
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -207,9 +197,9 @@ bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
 # assign [class="Skype"] $ws5
 
 
+#Open specific applications in floating mode
+exec yakuake
 
-
-# Open specific applications in floating mode
 for_window [title="alsamixer"] floating enable border pixel 1
 for_window [class="calamares"] floating enable border normal
 for_window [class="Clipgrab"] floating enable
@@ -237,7 +227,7 @@ for_window [class="Skype"] floating enable border normal
 for_window [class="Timeset-gui"] floating enable border normal
 for_window [class="(?i)virtualbox"] floating enable border normal
 for_window [class="Xfburn"] floating enable
-
+for_window [class="yakuake" ] floating enable
 # switch to workspace with urgent window automatically
 for_window [urgent=latest] focus
 
@@ -327,7 +317,8 @@ exec --no-startup-id discord
 
 #default
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id nitrogen --restore; sleep 1; picom -b
+exec --no-startup-id nitrogen --restore; sleep 1; picom --experimental-backends --backend glx
+
 #exec --no-startup-id manjaro-hello
 exec --no-startup-id nm-applet
 exec --no-startup-id xfce4-power-manager
@@ -335,14 +326,15 @@ exec --no-startup-id pamac-tray
 exec --no-startup-id clipit
 # exec --no-startup-id blueman-applet
 # exec_always --no-startup-id sbxkb
-exec --no-startup-id start_conky_maia
+#exec --no-startup-id start_conky_maia
 # exec --no-startup-id start_conky_green
 exec --no-startup-id xautolock -time 120 -locker blurlock
 exec_always --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
 
 # Color palette used for the terminal ( ~/.Xresources file )
-# Colors are gathered based on the documentation:
+# Colors are 
+# athered based on the documentation:
 # https://i3wm.org/docs/userguide.html#xresources
 # Change the variable name at the place you want to match the color
 # of your terminal like this:
@@ -361,7 +353,7 @@ set_from_resource $term_color2     color2
 set_from_resource $term_color3     color3
 set_from_resource $term_color4     color4
 set_from_resource $term_color5     color5
-set_from_resource $term_color6     color6
+set_from_resource $term_color      color6
 set_from_resource $term_color7     color7
 set_from_resource $term_color8     color8
 set_from_resource $term_color9     color9
@@ -374,10 +366,14 @@ set_from_resource $term_color15    color15
 
 # Start i3bar to display a workspace bar (plus the system information i3status if available)
 bar {
-	i3bar_command i3bar
-	status_command i3status
-	position top
 
+    i3bar_command i3bar
+	status_command i3status
+	
+    position top
+    
+    
+    
 ## please set your primary output first. Example: 'xrandr --output eDP1 --primary'
 #	tray_output primary
 #	tray_output eDP1
@@ -388,9 +384,9 @@ bar {
 	strip_workspace_numbers yes
 
     colors {
-        background #222D31
+        background #354257
         statusline #F9FAF9
-        separator  #454947
+        separator  #fff700
 
 #                      border  backgr. text
         focused_workspace  #F9FAF9 #16a085 #292F34
